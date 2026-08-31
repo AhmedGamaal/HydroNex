@@ -427,3 +427,31 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# ============================
+# Flutter / Dart
+# ============================
+mobile/**/build/
+mobile/**/.dart_tool/
+mobile/**/.flutter-plugins
+mobile/**/.flutter-plugins-dependencies
+mobile/**/.packages
+mobile/**/ios/Pods/
+mobile/**/ios/.symlinks/
+mobile/**/android/.gradle/
+mobile/**/*.iml
+
+# ============================
+# Python (AI Agents / Digital Twin)
+# ============================
+ai-agents/**/venv/
+ai-agents/**/.venv/
+digital-twin/**/venv/
+digital-twin/**/.venv/
+*.egg-info/
+
+# ============================
+# IDE (non-Visual Studio)
+# ============================
+.idea/
+*.iml
