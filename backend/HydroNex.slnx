@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="HydroNex.Api/HydroNex.Api.csproj" />
+  <Project Path="HydroNex.Application/HydroNex.Application.csproj" />
+  <Project Path="HydroNex.Domain/HydroNex.Domain.csproj" />
+  <Project Path="HydroNex.Infrastructure/HydroNex.Infrastructure.csproj" />
+</Solution>
