@@ -31,7 +31,7 @@ public enum GrowthStage
     Seedling,
     Vegetative,
     Flowering,
-    Harvest
+    Fruiting
 }
 
 public enum RiskLevel

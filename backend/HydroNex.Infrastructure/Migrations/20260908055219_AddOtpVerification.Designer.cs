@@ -4,6 +4,7 @@ using HydroNex.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HydroNex.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260908055219_AddOtpVerification")]
+    partial class AddOtpVerification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,11 +202,6 @@ namespace HydroNex.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BatchId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -212,36 +210,29 @@ namespace HydroNex.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("CycleDuration")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ExpectedHarvestDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("FarmId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GrowthStage")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("GrowthStage")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<DateTime>("PlantingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -252,8 +243,7 @@ namespace HydroNex.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmId", "BatchId")
-                        .IsUnique();
+                    b.HasIndex("FarmId");
 
                     b.ToTable("Crops");
                 });
