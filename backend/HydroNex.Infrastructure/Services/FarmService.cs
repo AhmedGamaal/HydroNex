@@ -32,6 +32,7 @@ public class FarmService : IFarmService
         };
 
         _db.Farms.Add(farm);
+
         await _db.SaveChangesAsync();
 
         return Map(farm, 0);
@@ -42,6 +43,7 @@ public class FarmService : IFarmService
     {
         return await _db.Farms
             .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.CreatedAt)
             .Select(x => new FarmResponse(
                 x.Id,
                 x.Name,
@@ -49,7 +51,6 @@ public class FarmService : IFarmService
                 x.Description,
                 x.Crops.Count,
                 x.CreatedAt))
-            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 

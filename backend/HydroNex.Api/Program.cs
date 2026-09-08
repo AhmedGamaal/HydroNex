@@ -1,7 +1,10 @@
+using HydroNex.Api.Hubs;
+using HydroNex.Api.Services;
 using HydroNex.Application.Features.Auth;
 using HydroNex.Application.Features.Crops;
 using HydroNex.Application.Features.Dashboard;
 using HydroNex.Application.Features.Farms;
+using HydroNex.Application.Features.Telemetry;
 using HydroNex.Domain.Entities;
 using HydroNex.Infrastructure;
 using HydroNex.Infrastructure.Persistence;
@@ -69,18 +72,47 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+
+
 // Application Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFarmService, FarmService>();
 builder.Services.AddScoped<ICropService, CropService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+// SignalR
+builder.Services.AddSignalR();
+
+builder.Services.AddScoped<
+    ITelemetryHubPublisher,
+    TelemetryHubPublisher>();
+builder.Services.AddHostedService<DigitalTwinSimulator>();
 // Controllers
 builder.Services.AddControllers();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "Bearer",
+        new Microsoft.OpenApi.OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = Microsoft.OpenApi.ParameterLocation.Header,
+            Description = "Enter your JWT token."
+        });
+
+    options.AddSecurityRequirement(document =>
+        new Microsoft.OpenApi.OpenApiSecurityRequirement
+        {
+            [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] =
+                new List<string>()
+        });
+});
 
 var app = builder.Build();
 
@@ -94,5 +126,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// SignalR
+app.MapHub<MonitoringHub>("/hubs/monitoring");
 
 app.Run();
