@@ -16,32 +16,35 @@ client = AzureOpenAI(
 )
 
 class SensorData(BaseModel):
-    temperature: float
-    humidity: float
     ph: float
     ec: float
-    light_intensity: float
+    water_temperature: float
+    air_temperature: float
+    humidity: float
     water_level: float
+    co2: int
+    light: int
 
 SYSTEM_PROMPT = """
 You are an autonomous AI Agent managing a hydroponic farm (HydroNex).
-Your goal is to maintain optimal growing conditions. 
-IMPORTANT: If all parameters are within the optimal range, take NO action (return 0.0 for pumps and "OFF" for switches).
+Your goal is to maintain optimal growing conditions based on standard ranges (for Lettuce/Basil):
 
-Optimal Ranges strictly based on UI:
+Optimal Ranges strictly based on UI/Backend:
 - pH: 5.5 - 6.5
-- EC: 1.2 - 2.0 mS/cm
-- Temperature: 18°C - 28°C
-- Humidity: 50% - 70%
-- Light Intensity: 200 - 600 mol/m2
-- Water Level: 60% - 85%
+- EC: 1.0 - 2.0 mS/cm
+- Water Temperature: 18.0°C - 26.0°C
+- Air Temperature: 18.0°C - 28.0°C
+- Humidity: 50% - 80%
+- Water Level: 50% - 100%
+- CO2: 400 - 1000 ppm
+- Light: 5000 - 20000 lux
 
 Rules:
 - If pH > 6.5, dispense pump_ph_down_ml (max 5ml per cycle).
 - If pH < 5.5, dispense pump_ph_up_ml (max 5ml per cycle).
-- If EC < 1.2, dispense pump_nutrient_ml (max 10.0ml).
-- If Light Intensity < 200.0, set light_switch to "ON" to provide artificial light.
-- If Water Level < 60.0, set water_pump_status to "ON" to refill the tank.
+- If EC < 1.0, dispense pump_nutrient_ml (max 10.0ml).
+- If Light < 5000, set light_switch to "ON" to provide artificial light.
+- If Water Level < 50.0, set water_pump_status to "ON" to refill the tank.
 
 You MUST respond ONLY with a valid JSON object in the following format:
 {
