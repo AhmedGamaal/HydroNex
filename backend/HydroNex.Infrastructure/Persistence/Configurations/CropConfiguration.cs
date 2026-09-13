@@ -8,17 +8,42 @@ public class CropConfiguration : IEntityTypeConfiguration<Crop>
 {
     public void Configure(EntityTypeBuilder<Crop> builder)
     {
-        builder.Property(c => c.Name).IsRequired().HasMaxLength(150);
-        builder.Property(c => c.CropType).IsRequired().HasMaxLength(100);
-        builder.Property(c => c.Variety).HasMaxLength(100);
-        builder.Property(c => c.GrowthStage).HasConversion<string>().HasMaxLength(30);
-        builder.Property(c => c.Status).HasConversion<string>().HasMaxLength(30);
+        builder.HasKey(x => x.Id);
 
-        builder.HasOne(c => c.Farm)
-            .WithMany(f => f.Crops)
-            .HasForeignKey(c => c.FarmId)
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Property(x => x.CropType)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(x => x.BatchId)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(x => x.Location)
+            .HasMaxLength(250);
+
+        builder.Property(x => x.Notes)
+            .HasMaxLength(1000);
+
+        builder.Property(x => x.Variety)
+            .HasMaxLength(100);
+
+        builder.Property(x => x.CycleDuration)
+            .IsRequired();
+
+        builder.HasIndex(x => new
+        {
+            x.FarmId,
+            x.BatchId
+        })
+        .IsUnique();
+
+        builder.HasOne(x => x.Farm)
+            .WithMany(x => x.Crops)
+            .HasForeignKey(x => x.FarmId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasIndex(c => c.FarmId);
     }
 }

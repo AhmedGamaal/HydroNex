@@ -199,6 +199,11 @@ namespace HydroNex.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BatchId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -207,29 +212,36 @@ namespace HydroNex.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("CycleDuration")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ExpectedHarvestDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("FarmId")
                         .HasColumnType("int");
 
-                    b.Property<string>("GrowthStage")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("GrowthStage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<DateTime>("PlantingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -240,7 +252,8 @@ namespace HydroNex.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmId");
+                    b.HasIndex("FarmId", "BatchId")
+                        .IsUnique();
 
                     b.ToTable("Crops");
                 });
@@ -320,6 +333,40 @@ namespace HydroNex.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Farms");
+                });
+
+            modelBuilder.Entity("HydroNex.Domain.Entities.OtpVerification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Code", "IsUsed");
+
+                    b.ToTable("OtpVerifications");
                 });
 
             modelBuilder.Entity("HydroNex.Domain.Entities.PlantImage", b =>
@@ -679,6 +726,17 @@ namespace HydroNex.Infrastructure.Migrations
                 {
                     b.HasOne("HydroNex.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Farms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HydroNex.Domain.Entities.OtpVerification", b =>
+                {
+                    b.HasOne("HydroNex.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
