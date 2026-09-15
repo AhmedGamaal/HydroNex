@@ -127,7 +127,7 @@ python main.py
 hydronex/
 ├── backend/          # ASP.NET Core API
 ├── mobile/           # Flutter application
-├── ai-agents/        # Monitoring Agent + Explainer Agent
+├── ai-agents/        # Our AI Agents
 ├── docs/             # Proposal
 ├── .gitignore
 ├── README.md
