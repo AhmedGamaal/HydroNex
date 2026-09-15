@@ -18,12 +18,11 @@ Built for **VICTORIS 5.0** — IEEE Mansoura Student Branch × IEEE Computer Soc
 | Repository structure & setup | ✅ Done |
 | Backend API (.NET) | ✅ Done |
 | Flutter app | 🚧 In Progress |
-| Digital Twin simulation | ✅ Done |
 | Disease detection model integration | ✅ Done |
 | Monitoring Agent / Recommendation Agent | ✅ Done |
 | Conversational Assistant (Chat AI) | ✅ Done |
-| Mobile UI screens | 🚧 In Progress |
-| Live deployment | 📋 Planned |
+| Mobile UI screens | ✅ Done  |
+| Live deployment | 🚧 In Progress |
 
 > This project was built for VICTORIS 5.0 Phase 2 (deadline: Sep 15, 2026). Core backend, AI services, and digital twin simulation are complete; the Flutter app is in active development.
 
@@ -55,7 +54,7 @@ Hydroponic farming is water-efficient and high-yield, but hard to manage — it 
 ## 🏗️ System Architecture
 
 ```
-IoT Sensing Layer (Digital Twin — Phase 2)
+IoT Sensing Layer 
         │  pH · EC · Temperature · Humidity · Water Level · Light
         ▼
 Connectivity Layer — REST API / JSON
@@ -74,7 +73,6 @@ Automated Control                 Application Layer
 
 ```
 
-> **Note:** Phase 2 uses a physically-informed **Digital Twin** simulation in place of physical hardware, with real ESP32 + sensor integration planned as a future step. The rest of the pipeline (backend, AI services, mobile app) connects to it exactly as it would to real hardware, via the same interface.
 
 ---
 
@@ -86,7 +84,7 @@ Automated Control                 Application Layer
 | Backend | ASP.NET Core, SQL Server, SignalR |
 | AI — Disease Detection | Pretrained MobileNetV2 (Hugging Face, fine-tuned on PlantVillage) |
 | AI — Reasoning & Chat | Monitoring Agent + Explainer Agent, via Gemini / OpenAI API |
-| Environment Simulation | Physically-informed Digital Twin (Phase 2) → Real ESP32 + Sensors (Future Plan) |
+
 
 ---
 
@@ -112,9 +110,9 @@ flutter pub get
 flutter run
 ```
 
-### AI Agents / Digital Twin
+### AI Agents 
 ```bash
-cd ai-agents   # or digital-twin
+cd ai-agents   
 pip install -r requirements.txt
 python main.py
 ```
@@ -130,7 +128,6 @@ hydronex/
 ├── backend/          # ASP.NET Core API
 ├── mobile/           # Flutter application
 ├── ai-agents/        # Monitoring Agent + Explainer Agent
-├── digital-twin/     # Digital twin simulation service
 ├── docs/             # Proposal
 ├── .gitignore
 ├── README.md
