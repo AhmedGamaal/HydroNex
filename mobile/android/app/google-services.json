@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "354416504506",
+    "project_id": "hydronex-ea580",
+    "storage_bucket": "hydronex-ea580.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354416504506:android:40d995137d07598b731c83",
+        "android_client_info": {
+          "package_name": "com.example.hydronex_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADJR0UF0ywyIF4XVcNy-nbdoAduD1UfUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
