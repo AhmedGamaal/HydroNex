@@ -30,10 +30,6 @@ logger = logging.getLogger("hydronex-recommendation")
 app = FastAPI(title="HydroNex Recommendation AI Service")
 
 
-# Whatever the .NET side sends for enums (a string like "Vegetative" if
-# JsonStringEnumConverter is registered, or a raw int like 1 if it isn't),
-# accept it and coerce to string - this endpoint should never 422 just
-# because of an enum-serialization mismatch on the .NET side.
 def _stringify(v: Any) -> str:
     return str(v)
 
@@ -62,8 +58,7 @@ client = (
     else None
 )
 
-# Aligned with HydroNex.Infrastructure.Services.SensorThresholdService -
-# keep these two in sync if you ever change one.
+
 SYSTEM_PROMPT = """
 You are an AI agronomist for HydroNex, an autonomous hydroponic farm system.
 You are given the current state of one crop: its type/growth stage, its

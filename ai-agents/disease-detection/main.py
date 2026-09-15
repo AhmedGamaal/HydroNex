@@ -40,10 +40,7 @@ async def analyze(image: UploadFile = File(...)):
 
     contents = await image.read()
 
-    # Passing raw bytes to image_classification() sends them with no
-    # Content-Type header, which HF's router now rejects ("No content type
-    # provided"). Writing to a temp file with the original extension lets
-    # the client infer the correct content type from the filename.
+
     suffix = os.path.splitext(image.filename or "upload.jpg")[1] or ".jpg"
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
         tmp.write(contents)
@@ -61,7 +58,6 @@ async def analyze(image: UploadFile = File(...)):
 
     top = results[0]
 
-    # Matches DiseaseDetectionAiResult exactly: DiseaseName, Confidence, AnalysisResult
     return {
         "diseaseName": top.label,
         "confidence": round(top.score, 4),
