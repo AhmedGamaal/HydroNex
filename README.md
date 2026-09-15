@@ -17,12 +17,12 @@ Built for **VICTORIS 5.0** — IEEE Mansoura Student Branch × IEEE Computer Soc
 |---|---|
 | Repository structure & setup | ✅ Done |
 | Backend API (.NET) | ✅ Done |
-| Flutter app | 🚧 In Progress |
+| Flutter app | ✅ Done |
 | Disease detection model integration | ✅ Done |
 | Monitoring Agent / Recommendation Agent | ✅ Done |
 | Conversational Assistant (Chat AI) | ✅ Done |
 | Mobile UI screens | ✅ Done  |
-| Live deployment | 🚧 In Progress |
+| Live deployment | ✅ Done |
 
 > This project was built for VICTORIS 5.0 Phase 2 (deadline: Sep 15, 2026). Core backend, AI services, and digital twin simulation are complete; the Flutter app is in active development.
 
