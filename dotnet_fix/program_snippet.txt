@@ -1,9 +1,0 @@
-Add this ONE line to Program.cs, right before `app.UseStaticFiles();`:
-
-    Directory.CreateDirectory(Path.Combine(app.Environment.ContentRootPath, "wwwroot"));
-    app.UseStaticFiles();
-
-That's the entire fix for the "WebRootPath was not found" warning - ASP.NET Core
-warns because wwwroot doesn't exist yet at startup (LocalFileStorageService only
-creates its uploads subfolder lazily, on first request). This makes sure wwwroot
-itself exists before UseStaticFiles() tries to serve from it.

@@ -81,9 +81,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ITelemetryHubPublisher, TelemetryHubPublisher>();
 
-// Digital Twin Simulator has been removed - telemetry is now expected to
-// come from an external source (e.g. a Python script) calling
-// POST /api/telemetry directly, the same endpoint a real device would use.
+// Digital Twin Simulator - generates fake sensor readings on an interval so
+// there's data to see (dashboards, alerts, SignalR pushes) while real
+// hardware/a Python data-feed script isn't hooked up yet. Safe to remove
+// later - it writes readings through the same TelemetryService pipeline as
+// any real POST /api/telemetry call, so nothing else depends on it existing.
+builder.Services.AddHostedService<HydroNex.Infrastructure.Services.DigitalTwinSimulator>();
 
 // Controllers - enums (GrowthStage, SensorType, RiskLevel, AlertSeverity, etc.)
 // now serialize as readable strings instead of raw integers.

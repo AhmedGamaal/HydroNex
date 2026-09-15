@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using HydroNex.Application.Common;
 using HydroNex.Application.Features.Auth;
 using HydroNex.Application.Features.Auth.DTOs;
 using HydroNex.Domain.Entities;
@@ -17,15 +18,18 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _db;
     private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
         ApplicationDbContext db,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IEmailService emailService)
     {
         _userManager = userManager;
         _db = db;
         _configuration = configuration;
+        _emailService = emailService;
     }
 
     public async Task<AuthResponse> RegisterAsync(
@@ -63,7 +67,7 @@ public class AuthService : IAuthService
             throw new InvalidOperationException(errors);
         }
 
-        await CreateOtpAsync(user.Id);
+        await CreateOtpAsync(user.Id, user.Email!);
 
         var token = GenerateJwtToken(user);
 
@@ -153,14 +157,10 @@ public class AuthService : IAuthService
         var user =
             await _userManager.FindByEmailAsync(request.Email);
 
-        // Don't reveal whether the email exists.
-        if (user is null)
+        if (user is not null)
         {
-            return new MessageResponse(
-                "If the email exists, an OTP has been sent.");
+            await CreateOtpAsync(user.Id, user.Email!);
         }
-
-        await CreateOtpAsync(user.Id);
 
         return new MessageResponse(
             "If the email exists, an OTP has been sent.");
@@ -219,7 +219,9 @@ public class AuthService : IAuthService
             "Password reset successfully.");
     }
 
-    private async Task CreateOtpAsync(string userId)
+    private async Task CreateOtpAsync(
+        string userId,
+        string emailAddress)
     {
         var oldOtps = await _db.OtpVerifications
             .Where(x =>
@@ -244,10 +246,22 @@ public class AuthService : IAuthService
         await _db.OtpVerifications.AddAsync(otp);
         await _db.SaveChangesAsync();
 
-        // Temporary for development.
-        // Replace with Email/SMS provider later.
-        Console.WriteLine(
-            $"[HydroNex OTP] User: {userId}, Code: {otp.Code}");
+        var emailBody = $"""
+            <div style="font-family: Arial, sans-serif;">
+                <h2>HydroNex OTP Verification</h2>
+                <p>Your verification code is:</p>
+                <h1 style="letter-spacing: 6px;">
+                    {otp.Code}
+                </h1>
+                <p>This code expires in 5 minutes.</p>
+                <p>If you did not request this code, ignore this email.</p>
+            </div>
+            """;
+
+        await _emailService.SendAsync(
+            emailAddress,
+            "HydroNex OTP Verification Code",
+            emailBody);
     }
 
     private string GenerateJwtToken(
@@ -290,13 +304,20 @@ public class AuthService : IAuthService
             .WriteToken(token);
     }
 
-    public async Task<string?> GetLatestOtpForDevAsync(string email)
+    public async Task<string?> GetLatestOtpForDevAsync(
+        string email)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user is null) return null;
+        var user =
+            await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
+            return null;
 
         var otp = await _db.OtpVerifications
-            .Where(x => x.UserId == user.Id && !x.IsUsed && x.ExpiresAt > DateTime.UtcNow)
+            .Where(x =>
+                x.UserId == user.Id &&
+                !x.IsUsed &&
+                x.ExpiresAt > DateTime.UtcNow)
             .OrderByDescending(x => x.CreatedAt)
             .FirstOrDefaultAsync();
 

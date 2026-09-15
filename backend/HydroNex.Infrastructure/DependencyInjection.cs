@@ -1,3 +1,4 @@
+using HydroNex.Application.Common;
 using HydroNex.Application.Common.Files;
 using HydroNex.Application.Features.Actions;
 using HydroNex.Application.Features.AI;
@@ -16,6 +17,7 @@ using HydroNex.Application.Features.Telemetry;
 using HydroNex.Infrastructure.AI;
 using HydroNex.Infrastructure.Persistence;
 using HydroNex.Infrastructure.Services;
+using HydroNex.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,6 +79,10 @@ public static class DependencyInjection
         {
             client.BaseAddress = new Uri(aiSection["RecommendationApiUrl"] ?? "http://localhost:9002/");
             client.Timeout = TimeSpan.FromSeconds(15);
+
+            var recommendationApiKey = aiSection["RecommendationApiKey"];
+            if (!string.IsNullOrWhiteSpace(recommendationApiKey))
+                client.DefaultRequestHeaders.Add("X-Api-Key", recommendationApiKey);
         });
 
         services.AddHttpClient("ChatAI", client =>
@@ -88,6 +94,12 @@ public static class DependencyInjection
         services.AddScoped<IPlantDiseaseAiClient, PlantDiseaseAiClient>();
         services.AddScoped<IRecommendationAiClient, RecommendationAiClient>();
         services.AddScoped<IChatAiClient, ChatAiClient>();
+
+        services.Configure<EmailSettings>(
+        configuration.GetSection("EmailSettings"));
+
+        services.AddScoped<IEmailService, EmailService>();
+
 
         return services;
     }

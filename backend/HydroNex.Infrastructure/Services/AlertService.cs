@@ -179,4 +179,25 @@ public class AlertService : IAlertService
 
         return AlertSeverity.Warning;
     }
+
+    public async Task<List<AlertResponse>> GetByCropAsync(
+        string userId,
+        int cropId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Alerts
+            .Where(a => a.CropId == cropId && a.Crop.Farm.UserId == userId)
+            .OrderByDescending(a => a.CreatedAt)
+            .Select(a => new AlertResponse(
+                a.Id,
+                a.CropId,
+                a.RecommendationId,
+                a.Type,
+                a.Message,
+                a.Severity,
+                a.Status,
+                a.ResolvedAt,
+                a.CreatedAt))
+            .ToListAsync(cancellationToken);
+    }
 }

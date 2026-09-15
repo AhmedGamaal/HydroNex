@@ -23,4 +23,11 @@ public interface IAlertService
         string message,
         int? recommendationId,
         CancellationToken cancellationToken = default);
+
+    // Added so the Alerts screen has something to call - was missing
+    // entirely (IAlertService previously had write methods only).
+    Task<List<AlertResponse>> GetByCropAsync(
+        string userId,
+        int cropId,
+        CancellationToken cancellationToken = default);
 }

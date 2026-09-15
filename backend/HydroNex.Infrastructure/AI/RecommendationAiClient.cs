@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using HydroNex.Application.Common.Exceptions;
 using HydroNex.Application.Features.AI;
 using HydroNex.Application.Features.AI.DTOs;
@@ -15,6 +17,16 @@ public class RecommendationAiClient : IRecommendationAiClient
 {
     private readonly HttpClient _httpClient;
 
+    // Program.cs's AddJsonOptions(JsonStringEnumConverter) only configures
+    // ASP.NET Core's own controller (de)serialization - it has no effect on
+    // this class's manual HttpClient call to the Python service, so the
+    // converter needs to be passed explicitly here too, or "High"/"AdjustPH"
+    // etc. fail to parse into the RiskLevel/RecommendationActionType enums.
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     public RecommendationAiClient(IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateClient("RecommendationAI");
@@ -29,12 +41,13 @@ public class RecommendationAiClient : IRecommendationAiClient
             using var response = await _httpClient.PostAsJsonAsync(
                 "generate",
                 context,
+                JsonOptions,
                 cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content
-                .ReadFromJsonAsync<RecommendationAiResponseDto>(cancellationToken);
+                .ReadFromJsonAsync<RecommendationAiResponseDto>(JsonOptions, cancellationToken);
 
             if (result is null)
                 throw new AiServiceUnavailableException();
@@ -48,7 +61,8 @@ public class RecommendationAiClient : IRecommendationAiClient
         catch (Exception ex) when (
             ex is HttpRequestException or
             TaskCanceledException or
-            NotSupportedException)
+            NotSupportedException or
+            JsonException)
         {
             throw new AiServiceUnavailableException(
                 "Recommendation AI service unavailable.", ex);

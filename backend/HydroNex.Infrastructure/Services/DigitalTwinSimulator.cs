@@ -49,7 +49,7 @@ public class DigitalTwinSimulator : BackgroundService
             try
             {
                 await Task.Delay(
-                    TimeSpan.FromSeconds(10),
+                    TimeSpan.FromMinutes(20),
                     stoppingToken);
             }
             catch (OperationCanceledException)
