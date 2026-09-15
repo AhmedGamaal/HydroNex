@@ -1,224 +1,101 @@
-# HydroNex Mobile
+# HydroNex Mobile 🌱
 
-The **HydroNex Mobile Application** is the Flutter-based client application of the HydroNex smart hydroponics platform.
+The mobile application for **HydroNex**, a smart hydroponics management system built to help users monitor and manage their hydroponic farms through a simple and interactive mobile experience.
 
-It provides users with an easy-to-use interface for monitoring hydroponic farms, viewing sensor readings, managing plants, receiving alerts, and interacting with the HydroNex backend services.
-
-The mobile application communicates with the **HydroNex ASP.NET Core Web API** through RESTful APIs.
+The application is built using **Flutter** and communicates with the HydroNex backend through RESTful APIs.
 
 ---
 
-## 🌱 About HydroNex
+## 🚀 Overview
 
-HydroNex is a smart hydroponics management platform designed to help farmers and hydroponics users monitor and manage their plants efficiently.
+The HydroNex Mobile application allows users to:
 
-The platform combines:
-
-- 📱 Flutter Mobile Application
-- ⚙️ ASP.NET Core Web API
-- 🗄️ SQL Server Database
-- 🤖 AI-based plant disease detection
-- 🌡️ IoT/Sensor monitoring
-- 🔔 Notifications and alerts
-
-The mobile application acts as the main interface between the user and the HydroNex backend.
+- 🔐 Register and log in
+- 🌱 Manage farms and plants
+- 📊 Monitor hydroponic sensor readings
+- 🤖 Use AI-powered plant disease detection
+- 🖼️ Upload plant images
+- 🔔 Receive important alerts and notifications
+- 📈 View and understand plant and environmental data
 
 ---
 
-## 🚀 Features
+## 🛠️ Technologies
 
-### 🔐 Authentication
-
-Users can:
-
-- Register a new account
-- Login securely
-- Logout
-- Maintain an authenticated session
-- Access features according to their role
-
-Authentication is handled through the HydroNex backend using JWT-based authentication.
+- **Flutter**
+- **Dart**
+- **REST APIs**
+- **JWT Authentication**
+- **ASP.NET Core Web API**
+- **JSON**
+- **Git & GitHub**
 
 ---
 
-### 🌱 Farm Management
-
-Users can:
-
-- Create and manage farms
-- View their farms
-- View farm details
-- Manage plants associated with their farms
-- Monitor the current status of their hydroponic environment
-
----
-
-### 📊 Sensor Monitoring
-
-The application displays sensor information received from the backend, such as:
-
-- pH
-- Electrical Conductivity (EC)
-- Water Temperature
-- Air Temperature
-- Humidity
-- Water Level
-- CO₂
-- Light Intensity
-
-Sensor values can be presented through dashboards, cards, charts, and status indicators to make the data easier to understand.
-
----
-
-### 🤖 Plant Disease Detection
-
-HydroNex provides an AI-powered plant disease detection feature.
-
-Users can:
-
-1. Select or capture a plant image.
-2. Upload the image.
-3. Send it to the HydroNex backend.
-4. Receive the AI prediction.
-5. View the detected disease and related information.
-
----
-
-### 🔔 Alerts & Notifications
-
-The application can notify users when important conditions are detected, such as abnormal sensor readings or potential plant problems.
-
----
-
-## 🏗️ Project Structure
-
-The Flutter application follows a modular structure to keep the code maintainable and scalable.
+## 📁 Project Structure
 
 ```text
 mobile/
 │
+├── android/
+├── ios/
 ├── lib/
-│   ├── core/
-│   │   ├── constants/
-│   │   ├── network/
-│   │   ├── theme/
-│   │   └── utils/
-│   │
-│   ├── features/
-│   │   ├── authentication/
-│   │   ├── farms/
-│   │   ├── plants/
-│   │   ├── sensors/
-│   │   ├── disease_detection/
-│   │   └── notifications/
-│   │
-│   ├── models/
-│   │
-│   ├── services/
-│   │
-│   ├── widgets/
-│   │
-│   └── main.dart
-│
+├── test/
 ├── assets/
 │
-├── test/
-│
 ├── pubspec.yaml
+├── pubspec.lock
 └── README.md
 ```
 
-The exact structure may evolve as new features are added.
+The main Flutter application code is located inside the `lib` directory.
 
 ---
 
 ## 🔌 Backend Integration
 
-The mobile application communicates with the HydroNex backend through REST APIs.
-
-### Backend
-
-The backend is built using:
-
-- ASP.NET Core
-- C#
-- Entity Framework Core
-- SQL Server
-- ASP.NET Core Identity
-- JWT Authentication
-
-The backend provides endpoints for authentication, farms, plants, sensors, images, disease detection, and other HydroNex services.
-
-### API Base URL
-
-For development, the API can be configured through the application's environment/configuration.
-
-Example:
+The mobile application communicates with the HydroNex ASP.NET Core backend through REST APIs.
 
 ```text
-https://hydronex-api.azurewebsites.net
+Flutter Application
+        │
+        ▼
+   REST API Calls
+        │
+        ▼
+HydroNex ASP.NET Core API
+        │
+        ▼
+     Database
 ```
 
-> The production API URL should be stored in one centralized configuration location rather than being hardcoded throughout the application.
+The mobile application does **not** communicate directly with the database. All data access is handled through the backend API.
 
 ---
 
-## 📡 API Communication
+## 🔐 Authentication
 
-The Flutter application should use a dedicated API/network layer for communicating with the backend.
+HydroNex uses JWT-based authentication.
 
-A typical request flow is:
-
-```text
-Flutter UI
-    │
-    ▼
-Feature / Controller
-    │
-    ▼
-Repository / Service
-    │
-    ▼
-HTTP Client
-    │
-    ▼
-HydroNex API
-    │
-    ▼
-Database / AI Services
-```
-
-This separation keeps the UI independent from the backend implementation.
-
----
-
-## 🔑 Authentication Flow
-
-The authentication process follows this general flow:
+The general authentication flow is:
 
 ```text
 User
- │
- ▼
-Flutter Login Screen
- │
- ▼
-POST /api/auth/login
- │
- ▼
+  │
+  ▼
+Login / Register
+  │
+  ▼
 HydroNex API
- │
- ▼
+  │
+  ▼
 JWT Token
- │
- ▼
-Flutter Secure Storage
- │
- ▼
-Authenticated API Requests
+  │
+  ▼
+Authenticated Requests
 ```
 
-The JWT token should be attached to protected API requests using the `Authorization` header:
+Authenticated requests should include:
 
 ```http
 Authorization: Bearer <token>
@@ -226,31 +103,84 @@ Authorization: Bearer <token>
 
 ---
 
-## 🛠️ Technologies
+## 🌱 Main Modules
 
-| Technology | Purpose |
-|---|---|
-| Flutter | Mobile application framework |
-| Dart | Programming language |
-| REST API | Backend communication |
-| ASP.NET Core | Backend API |
-| JWT | Authentication |
-| SQL Server | Database |
-| Entity Framework Core | Data access |
-| Git & GitHub | Version control |
+### Authentication
+
+Handles:
+
+- User registration
+- User login
+- Logout
+- Authentication state
+- JWT token management
+
+### Farms
+
+Allows users to:
+
+- Create farms
+- View farms
+- View farm details
+- Manage their hydroponic farms
+
+### Plants
+
+Allows users to:
+
+- Add plants
+- View plant information
+- Associate plants with farms
+- Monitor plant status
+
+### Sensors
+
+Displays environmental information collected from the hydroponic system, including:
+
+- pH
+- EC
+- Water Temperature
+- Air Temperature
+- Humidity
+- Water Level
+- CO₂
+- Light Intensity
+
+### AI Disease Detection
+
+Users can upload a plant image and receive an AI-based prediction from the HydroNex backend.
+
+```text
+Plant Image
+    │
+    ▼
+Flutter Application
+    │
+    ▼
+HydroNex API
+    │
+    ▼
+AI Model
+    │
+    ▼
+Prediction
+    │
+    ▼
+Flutter Application
+```
 
 ---
 
-## 📦 Getting Started
+## ⚙️ Getting Started
 
-### Prerequisites
+### Requirements
 
-Make sure you have installed:
+Make sure you have:
 
 - Flutter SDK
 - Dart SDK
 - Android Studio or VS Code
-- Android Emulator or physical Android device
+- Android Emulator or a physical Android device
 - Git
 
 Check your Flutter installation:
@@ -267,7 +197,7 @@ flutter doctor
 git clone https://github.com/AhmedGamaal/HydroNex.git
 ```
 
-Navigate to the mobile project:
+Navigate to the mobile directory:
 
 ```bash
 cd HydroNex/mobile
@@ -277,8 +207,6 @@ cd HydroNex/mobile
 
 ### Install Dependencies
 
-Run:
-
 ```bash
 flutter pub get
 ```
@@ -287,7 +215,7 @@ flutter pub get
 
 ### Run the Application
 
-Connect an emulator or physical device and run:
+Connect an Android/iOS device or start an emulator, then run:
 
 ```bash
 flutter run
@@ -295,50 +223,44 @@ flutter run
 
 ---
 
-## ⚙️ API Configuration
+## 🌐 API Configuration
 
-Before running the application, make sure the API base URL points to the correct backend environment.
+The mobile application requires the HydroNex backend API to be available.
 
-For example:
+The API base URL should be configured in the appropriate application configuration/service rather than being duplicated throughout the project.
 
-```dart
-const String baseUrl = "https://hydronex-api.azurewebsites.net";
-```
-
-For local development, the URL may be different depending on whether the application is running on an Android emulator, iOS simulator, or physical device.
-
-> Avoid committing private keys, secrets, passwords, or sensitive configuration values to GitHub.
+For the deployed environment, use the current HydroNex API URL provided by the backend team.
 
 ---
 
 ## 🧪 Testing
 
-Run Flutter tests using:
+Run Flutter tests:
 
 ```bash
 flutter test
 ```
 
-For static analysis:
+Run static analysis:
 
 ```bash
 flutter analyze
 ```
 
-Before submitting changes, make sure:
+Before pushing changes, make sure the project builds successfully and:
 
 ```bash
 flutter analyze
 flutter test
 ```
 
-complete successfully.
+complete without errors.
 
 ---
 
 ## 🔄 Development Workflow
 
-Before starting work:
+Before starting new work:
 
 ```bash
 git pull origin main
@@ -358,69 +280,59 @@ git commit -m "Add feature-name"
 git push origin feature/feature-name
 ```
 
-Create a Pull Request to merge the changes into `main`.
+Then create a Pull Request to merge the changes into `main`.
 
 ---
 
-## 🤝 Team Responsibilities
+## 🤝 Mobile Team Responsibilities
 
 The Mobile Team is responsible for:
 
-- Flutter UI implementation
+- Flutter UI
 - Navigation
-- State management
 - API integration
-- Authentication handling
+- Authentication
+- State management
 - Sensor data visualization
+- Farm and plant management
 - Image upload
-- Disease detection interface
+- AI prediction interface
 - Error handling
-- Loading and empty states
-- Mobile-side validation
-- Testing and debugging
+- Loading states
+- Input validation
+- Mobile testing
 
-The mobile application should communicate with the backend through the documented API endpoints rather than directly accessing the database.
+All communication with backend services should be performed through the provided API endpoints.
 
 ---
 
 ## 📚 API Documentation
 
-The HydroNex backend provides Swagger/OpenAPI documentation for available endpoints.
+The backend provides Swagger/OpenAPI documentation that should be used when integrating the mobile application with the API.
 
-The API documentation should be used by the Flutter team to understand:
+The documentation contains:
 
-- Endpoint URLs
+- Available endpoints
 - HTTP methods
 - Request parameters
 - Request bodies
 - Response models
 - Authentication requirements
-- Error responses
+- Possible error responses
 
 ---
 
-## 🔗 Project Components
+## 👥 HydroNex
 
-HydroNex consists of multiple components:
-
-- **Mobile:** Flutter mobile application
-- **Backend:** ASP.NET Core Web API
-- **AI:** Plant disease detection services
-- **Database:** SQL Server
-
-The mobile application is responsible for the user-facing experience and communicates with the backend through the API layer.
-
----
-
-## 👥 Contributors
-
-HydroNex is developed as a graduation project by a multidisciplinary team working across:
+HydroNex is developed as a multidisciplinary graduation project involving:
 
 - Backend Development
 - Mobile Development
 - Artificial Intelligence
 - UI/UX Design
-- Cloud / Deployment
+- Cloud & Deployment
+
+The Flutter application represents the mobile interface of the HydroNex ecosystem.
 
 ---
 
